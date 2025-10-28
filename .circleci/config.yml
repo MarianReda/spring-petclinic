@@ -19,8 +19,3 @@ jobs:
       - docker/push:
           image: marianreda/spring-petclinic:${CIRCLE_SHA1}
 
-workflows:
-  version: 2
-  build_and_deploy:
-    jobs:
-      - build-and-push-image:
