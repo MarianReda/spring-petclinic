@@ -14,18 +14,27 @@ jobs:
       # Enable Docker engine
       - setup_remote_docker
 
-      # Login to Docker Hub
-      - docker/login:
-          username: DOCKERHUB_USERNAME      # no $ here
-          password: DOCKERHUB_PASSWORD
+      # Login to Docker Hub using environment variables
+      - run:
+          name: Login to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
 
-      # Build Docker image (use image + tag separately)
-      - docker/build:
-          image: marianreda/spring-petclinic
-          tag: ${CIRCLE_SHA1}
+      # Build Docker image from your Dockerfile
+      - run:
+          name: Build Docker Image
+          command: |
+            docker build -t marianreda/spring-petclinic:${CIRCLE_SHA1} .
 
-      # Push the image to Docker Hub
-      - docker/push:
-          image: marianreda/spring-petclinic
-          tag: ${CIRCLE_SHA1}
+      # Push image to Docker Hub
+      - run:
+          name: Push Docker Image
+          command: |
+            docker push marianreda/spring-petclinic:${CIRCLE_SHA1}
+
+workflows:
+  version: 2.1
+  build_and_deploy:
+    jobs:
+      - build-docker-image
 
