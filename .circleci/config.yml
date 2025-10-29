@@ -29,8 +29,3 @@ jobs:
           image: marianreda/spring-petclinic
           tag: ${CIRCLE_SHA1}
 
-workflows:
-  version: 2.1
-  build_and_deploy:
-    jobs:
-      - build-docker-image
